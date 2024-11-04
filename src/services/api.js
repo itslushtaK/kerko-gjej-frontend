@@ -1,7 +1,7 @@
 // src/services/api.js
 import axios from "axios";
 
-const API_URL = "https://kerko-gjej-production.up.railway.app"; // Update with your API base URL
+const API_URL = "https://kerko-gjej-production.up.railway.app/api/auth"; // Update with your API base URL
 
 export const registerUser = async (userData) => {
   return await axios.post(`${API_URL}/register`, userData);
