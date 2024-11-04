@@ -26,32 +26,63 @@ const LostItems = () => {
     fetchLostItems();
   }, []);
 
-  if (loading) return <div className="text-center">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center">{error}</div>;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="loader mb-4"></div>
+        <p className="text-lg text-gray-600">Loading lost items...</p>
+        <style jsx>{`
+          .loader {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+          }
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <div className="text-red-500 text-center">{error}</div>;
+  }
 
   return (
     <div className="max-w-4xl mx-auto pt-20 py-4">
-      {" "}
-      {/* Added 'pt-20' for padding-top */}
-      <h2 className="text-2xl font-bold mb-4">Lost Items</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        Lost Items
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {lostItems.map((item) => (
           <Link
             to={`/lost-item/${item._id}`}
             key={item._id}
-            className="bg-white rounded-lg shadow p-4 transition-transform transform hover:scale-105"
+            className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
           >
             <img
-              src={item.image || defaultImage}
-              alt={item.name}
-              className="w-full h-32 object-cover rounded-t-lg"
+              src={item.image ? item.image : defaultImage}
+              alt={item.name || "Lost item"}
+              className="w-full h-40 object-cover"
             />
-            <h3 className="text-lg font-semibold mt-2">{item.name}</h3>
-            <p className="text-gray-700">{item.description}</p>
-            <p className="text-gray-500">
-              Posted on: {new Date(item.datePosted).toLocaleDateString()}
-            </p>
-            <p className="text-gray-600">Contact: {item.phoneNumber}</p>
+            <div className="p-4">
+              <h3 className="text-xl font-semibold text-gray-800">
+                {item.name}
+              </h3>
+              <p className="text-gray-600 mb-2">{item.description}</p>
+              <p className="text-sm text-gray-500">
+                Posted on: {new Date(item.datePosted).toLocaleDateString()}
+              </p>
+              <p className="text-sm text-gray-500">
+                Contact: {item.phoneNumber}
+              </p>
+            </div>
           </Link>
         ))}
       </div>

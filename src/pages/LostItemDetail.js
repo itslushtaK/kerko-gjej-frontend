@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faViber, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 const LostItemDetail = () => {
   const { id } = useParams(); // Get the ID from the URL
@@ -36,8 +38,16 @@ const LostItemDetail = () => {
   if (!lostItem) return <div className="text-center">Lost item not found.</div>;
 
   return (
-    <div className="max-w-2xl mx-auto py-4">
-      <h2 className="text-2xl font-bold mb-4">{lostItem.name}</h2>
+    <div className="max-w-2xl mx-auto py-4 relative">
+      <Link
+        to="/lost-items"
+        className=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+      >
+        Back to All Lost Items
+      </Link>
+      <h2 className="text-2xl font-bold mb-4 text-left mt-16">
+        {lostItem.name}
+      </h2>
       <img
         src={lostItem.image || defaultImage} // Use default image if item image is not available
         alt={lostItem.name}
@@ -47,7 +57,12 @@ const LostItemDetail = () => {
       <p className="text-gray-500 mb-2">
         Posted on: {new Date(lostItem.datePosted).toLocaleDateString()}
       </p>
-      <p className="text-gray-600">Contact: {lostItem.phoneNumber}</p>
+      <p className="text-gray-600 flex items-center gap-2">
+        Contact:
+        <FontAwesomeIcon icon={faViber} className="text-purple-500" />
+        <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
+        {lostItem.phoneNumber}
+      </p>
     </div>
   );
 };

@@ -11,9 +11,18 @@ const Register = () => {
   });
   const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
   };
 
   const validatePassword = (password) => {
@@ -23,20 +32,48 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { password, confirmPassword } = formData;
+    const { username, email, password, confirmPassword } = formData;
 
+    // Validate username
+    if (username.trim() === "") {
+      setMessage("Username is required.");
+      setIsSuccess(false);
+      setUsernameError(true);
+      return;
+    } else {
+      setUsernameError(false);
+    }
+
+    // Validate email
+    if (!validateEmail(email)) {
+      setMessage("Please enter a valid email address.");
+      setIsSuccess(false);
+      setEmailError(true);
+      return;
+    } else {
+      setEmailError(false);
+    }
+
+    // Validate password requirements
     if (!validatePassword(password)) {
       setMessage(
         "Password must be at least 8 characters long, contain at least one uppercase letter and one number."
       );
       setIsSuccess(false);
+      setPasswordError(true);
       return;
+    } else {
+      setPasswordError(false);
     }
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       setMessage("Passwords do not match.");
       setIsSuccess(false);
+      setConfirmPasswordError(true);
       return;
+    } else {
+      setConfirmPasswordError(false);
     }
 
     try {
@@ -52,9 +89,11 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-gray-100 py-10 md:py-20">
-      <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-md mx-4 md:mx-0">
-        <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-5/12 2xl:w-4/12 bg-white rounded-lg shadow-md lg:shadow-lg">
+        <h1 className="text-center font-semibold text-3xl lg:text-4xl text-gray-800">
+          Register
+        </h1>
         {message && (
           <div
             className={`mt-5 mb-5 p-4 rounded-md text-center ${
@@ -66,14 +105,16 @@ const Register = () => {
             {message}
           </div>
         )}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="mt-10 space-y-4">
           <input
             type="text"
             name="username"
             onChange={handleChange}
             placeholder="Username"
             required
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              usernameError ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
           <input
             type="email"
@@ -81,7 +122,9 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Email"
             required
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              emailError ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
           <input
             type="password"
@@ -89,7 +132,9 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Password"
             required
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              passwordError ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
           <input
             type="password"
@@ -97,16 +142,18 @@ const Register = () => {
             onChange={handleChange}
             placeholder="Confirm Password"
             required
-            className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:border-blue-500"
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              confirmPasswordError ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white rounded-md p-2 hover:bg-blue-600 transition duration-300"
+            className="w-full py-3 mt-10 bg-gray-800 rounded-sm font-medium text-white uppercase focus:outline-none hover:bg-gray-700"
           >
             Register
           </button>
         </form>
-        <p className="mt-4 text-center">
+        <p className="mt-8 text-center text-sm">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
             Login here.

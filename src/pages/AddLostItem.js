@@ -3,14 +3,41 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AddLostItem = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [image, setImage] = useState(""); // Changed to string
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    image: "",
+    phoneNumber: "",
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
   const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const validateFields = () => {
+    let errors = {};
+
+    // Name validation
+    if (!formData.name.trim()) {
+      errors.name = "Item Name is required.";
+    }
+
+    // Phone number validation
+    const phoneRegex = /^\+383\d{8,}$/;
+    if (formData.phoneNumber && !phoneRegex.test(formData.phoneNumber)) {
+      errors.phoneNumber =
+        "Phone number must start with +383 and have at least 8 digits.";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,38 +45,24 @@ const AddLostItem = () => {
     setError(null);
     setSuccessMessage(null);
 
-    const phoneRegex = /^\+383\d{8,}$/; // Matches +383 followed by at least 8 digits
-    if (phoneNumber && !phoneRegex.test(phoneNumber)) {
-      setError("Phone number must start with +383 and have at least 8 digits.");
+    if (!validateFields()) {
       setLoading(false);
       return;
     }
 
-    const itemData = {
-      name,
-      description,
-      image,
-      phoneNumber,
-    };
-
     try {
       const response = await axios.post(
         "http://localhost:5000/api/lost-items/add",
-        itemData,
+        formData,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
       setSuccessMessage(
         "Your post has been submitted for approval to the admin."
       );
-
-      setTimeout(() => {
-        navigate("/lost-items");
-      }, 2000); // Delay before navigating (2 seconds)
+      setTimeout(() => navigate("/lost-items"), 2000);
     } catch (err) {
       setError(err.response?.data?.error || "Error adding lost item");
     } finally {
@@ -62,95 +75,85 @@ const AddLostItem = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // Set image as Base64 string
+        setFormData((prev) => ({ ...prev, image: reader.result }));
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Convert image to base64 string
     } else {
-      setImage(""); // Reset image if no file is selected
+      setFormData((prev) => ({ ...prev, image: "" }));
     }
   };
 
   return (
-    <div className="max-w-md mx-auto py-4">
-      <h2 className="text-2xl font-bold mb-4">Add Lost Item</h2>
-      {error && (
-        <div
-          className="flex items-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"
-          role="alert"
-        >
-          <svg
-            className="fill-current w-4 h-4 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M18 8a8 8 0 11-16 0 8 8 0 0116 0zm-9 4h2v2H9v-2zm0-8h2v6H9V4z" />
-          </svg>
-          <span>{error}</span>
-        </div>
-      )}
-      {successMessage && (
-        <div
-          className="flex items-center bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"
-          role="alert"
-        >
-          <svg
-            className="fill-current w-4 h-4 mr-2"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9 12l2-2 5 5L9 4l-5 5z" />
-          </svg>
-          <span>{successMessage}</span>
-        </div>
-      )}
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block mb-2">Item Name:</label>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-5/12 2xl:w-4/12 bg-white rounded-lg shadow-md lg:shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-6">Add Lost Item</h2>
+
+        {error && (
+          <div className="mt-5 mb-5 p-4 rounded-md text-center bg-red-100 text-red-800">
+            {error}
+          </div>
+        )}
+        {successMessage && (
+          <div className="mt-5 mb-5 p-4 rounded-md text-center bg-green-100 text-green-800">
+            {successMessage}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            placeholder="Item Name"
+            onChange={handleChange}
+            value={formData.name}
             required
-            className="border rounded w-full py-2 px-3"
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              fieldErrors.name ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Description:</label>
+          {fieldErrors.name && (
+            <p className="text-red-500 text-sm">{fieldErrors.name}</p>
+          )}
+
           <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name="description"
+            placeholder="Description"
+            onChange={handleChange}
+            value={formData.description}
             required
-            className="border rounded w-full py-2 px-3"
+            className="block w-full py-3 px-1 text-gray-800 border-b-2 border-gray-100 focus:outline-none focus:border-gray-200"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Upload Image(optional): </label>
+
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            className="border rounded w-full py-2 px-3"
+            className="block w-full py-3 px-1 text-gray-800 border-b-2 border-gray-100 focus:outline-none focus:border-gray-200"
           />
-        </div>
-        <div className="mb-4">
-          <label className="block mb-2">Phone Number:</label>
+
           <input
             type="text"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
-            className="border rounded w-full py-2 px-3"
+            name="phoneNumber"
+            placeholder="Phone Number"
+            onChange={handleChange}
+            value={formData.phoneNumber}
+            className={`block w-full py-3 px-1 text-gray-800 border-b-2 ${
+              fieldErrors.phoneNumber ? "border-red-500" : "border-gray-100"
+            } focus:outline-none focus:border-gray-200`}
           />
-        </div>
-        <button
-          type="submit"
-          className={`bg-blue-500 text-white rounded py-2 px-4 ${
-            loading ? "opacity-50" : ""
-          }`}
-          disabled={loading}
-        >
-          {loading ? "Adding..." : "Add Lost Item"}
-        </button>
-      </form>
+          {fieldErrors.phoneNumber && (
+            <p className="text-red-500 text-sm">{fieldErrors.phoneNumber}</p>
+          )}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full py-3 mt-6 bg-gray-800 text-white rounded-sm font-medium uppercase hover:bg-gray-700 focus:outline-none"
+          >
+            {loading ? "Adding..." : "Add Lost Item"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

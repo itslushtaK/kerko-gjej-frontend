@@ -9,7 +9,7 @@ import LostItems from "./pages/LostItems";
 import LostItemDetail from "./pages/LostItemDetail";
 import AddLostItem from "./pages/AddLostItem";
 import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute"; // Import PublicRoute
+import PublicRoute from "./components/PublicRoute";
 import Logout from "./pages/Logout";
 import ProfileView from "./pages/ProfileView";
 import ProfilePage from "./pages/ProfilePage";
@@ -17,6 +17,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import EmailConfirmed from "./pages/EmailConfirmed";
+import ItemApproved from "./pages/ItemApproved";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -34,7 +35,11 @@ function App() {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      {/* Navbar with higher z-index */}
+      <div style={{ position: "relative", zIndex: 50 }}>
+        <Navbar isLoggedIn={isLoggedIn} />
+      </div>
+
       <Routes>
         <Route path="/" element={<Home />} />
 
@@ -85,6 +90,7 @@ function App() {
         <Route path="/lost-items" element={<LostItems />} />
         <Route path="/lost-item/:id" element={<LostItemDetail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/item-approved" element={<ItemApproved />} />
       </Routes>
     </>
   );
