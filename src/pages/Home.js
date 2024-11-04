@@ -1,8 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUserPlus, faEnvelopeOpenText, faFileUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserPlus,
+  faEnvelopeOpenText,
+  faFileUpload,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -18,9 +21,7 @@ const Home = () => {
   return (
     <div className="relative overflow-hidden">
       {/* Navbar with higher z-index */}
-      <div className="relative z-50">
-        <Navbar />
-      </div>
+      <div className="relative z-50"></div>
 
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-white to-purple-300 animate-pulse-slow"></div>
@@ -33,9 +34,10 @@ const Home = () => {
             "url('https://source.unsplash.com/random/1920x1080?lost-and-found')",
         }}
       >
-        <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-20 z-10"></div>
 
-        <div className="relative z-10 text-center max-w-2xl">
+        <div className="relative z-20 text-center max-w-2xl">
           <h1 className="text-5xl font-bold mb-6 tracking-wide leading-tight md:text-6xl">
             Welcome to
             <br />
@@ -63,7 +65,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="relative z-10 w-full max-w-4xl bg-white bg-opacity-90 rounded-lg p-6 md:p-12 shadow-xl backdrop-blur-md text-gray-800">
+        <div className="relative z-20 w-full max-w-4xl bg-white bg-opacity-90 rounded-lg p-6 md:p-12 shadow-xl backdrop-blur-md text-gray-800">
           <h2 className="text-3xl font-semibold text-center mb-8">
             How It Works?
           </h2>
