@@ -72,16 +72,41 @@ const AddLostItem = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
+    const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    // Check file size (in bytes)
+    const fileSize = file.size; // size in bytes
+    const maxSize = 80 * 1024; // 80 KB in bytes
+
+    if (fileSize > maxSize) {
+      setError("Image size should not exceed 80 KB.");
+      return;
+    }
+
+    try {
+      const options = {
+        maxSizeMB: 0.08, // maximum size in MB (80 KB)
+        maxWidthOrHeight: 1920, // max width or height
+        useWebWorker: true, // use web worker for compression
+      };
+      
+      // Compress the image
+      const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prev) => ({ ...prev, image: reader.result }));
       };
-      reader.readAsDataURL(file); // Convert image to base64 string
-    } else {
-      setFormData((prev) => ({ ...prev, image: "" }));
+      reader.readAsDataURL(compressedFile); // Convert compressed image to base64 string
+    } catch (err) {
+      setError("Error compressing image.");
+      console.error(err);
     }
-  };
+  } else {
+    setFormData((prev) => ({ ...prev, image: "" }));
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
