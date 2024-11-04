@@ -52,12 +52,13 @@ const AddLostItem = () => {
 
     try {
       const response = await axios.post(
-        "kerko-gjej-production.up.railway.app/api/lost-items/add",
-        formData, // Changed from itemData to formData
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+  "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
+  formData,
+  {
+    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+  }
+);
+
 
       setSuccessMessage(
         "Your post has been submitted for approval to the admin."
