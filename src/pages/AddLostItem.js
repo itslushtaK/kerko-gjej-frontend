@@ -6,9 +6,9 @@ const AddLostItem = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    image: "",
     phoneNumber: "",
   });
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -23,12 +23,10 @@ const AddLostItem = () => {
   const validateFields = () => {
     let errors = {};
 
-    // Name validation
     if (!formData.name.trim()) {
       errors.name = "Item Name is required.";
     }
 
-    // Phone number validation
     const phoneRegex = /^\+383\d{8,}$/;
     if (formData.phoneNumber && !phoneRegex.test(formData.phoneNumber)) {
       errors.phoneNumber =
@@ -50,12 +48,24 @@ const AddLostItem = () => {
       return;
     }
 
+    // Use FormData to handle file upload
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("description", formData.description);
+    data.append("phoneNumber", formData.phoneNumber);
+    if (imageFile) {
+      data.append("image", imageFile); // Add the image file directly
+    }
+
     try {
       const response = await axios.post(
         "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-        formData,
+        data,
         {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "multipart/form-data", // Important for file uploads
+          },
         }
       );
 
@@ -70,29 +80,9 @@ const AddLostItem = () => {
     }
   };
 
-  const handleImageChange = async (e) => {
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await axios.post(
-        "https://kerko-gjej-production.up.railway.app/api/upload/upload-image",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      setFormData((prev) => ({ ...prev, image: response.data.imageUrl })); // Store the Cloudinary URL
-    } catch (error) {
-      console.error("Image upload failed", error);
-      setError("Failed to upload image");
-    }
+    setImageFile(file); // Store the file itself, not as a base64 string
   };
 
   return (
