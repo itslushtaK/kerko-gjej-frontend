@@ -80,10 +80,23 @@ const AddLostItem = () => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setImageFile(file); // Store the file itself, not as a base64 string
-  };
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const formData = new FormData();
+    formData.append("image", file);
+    try {
+      const response = await axios.post(
+        "https://kerko-gjej-production.up.railway.app/api/upload-image",
+        formData
+      );
+      setFormData((prev) => ({ ...prev, image: response.data.imageUrl }));
+    } catch (err) {
+      setError("Image upload failed");
+    }
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
