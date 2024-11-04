@@ -18,6 +18,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ChangePassword from "./pages/ChangePassword";
 import EmailConfirmed from "./pages/EmailConfirmed";
 import ItemApproved from "./pages/ItemApproved";
+import ApproveItemPage from "./pages/ApproveItemPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -91,6 +92,7 @@ function App() {
         <Route path="/lost-item/:id" element={<LostItemDetail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/item-approved" element={<ItemApproved />} />
+          <Route path="/approve-item/:id" component={ApproveItemPage} />
       </Routes>
     </>
   );
