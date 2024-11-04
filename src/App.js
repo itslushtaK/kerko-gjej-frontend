@@ -9,7 +9,7 @@ import LostItems from "./pages/LostItems";
 import LostItemDetail from "./pages/LostItemDetail";
 import AddLostItem from "./pages/AddLostItem";
 import ProtectedRoute from "./components/ProtectedRoute";
-import PublicRoute from "./components/PublicRoute"; // Import PublicRoute
+import PublicRoute from "./components/PublicRoute";
 import Logout from "./pages/Logout";
 import ProfileView from "./pages/ProfileView";
 import ProfilePage from "./pages/ProfilePage";
@@ -34,7 +34,11 @@ function App() {
 
   return (
     <>
-      <Navbar isLoggedIn={isLoggedIn} />
+      {/* Navbar with higher z-index */}
+      <div style={{ position: "relative", zIndex: 50 }}>
+        <Navbar isLoggedIn={isLoggedIn} />
+      </div>
+
       <Routes>
         <Route path="/" element={<Home />} />
 
