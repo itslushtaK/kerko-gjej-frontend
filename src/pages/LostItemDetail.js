@@ -18,7 +18,7 @@ const LostItemDetail = () => {
       try {
         console.log("Fetching lost item with ID:", id);
         const response = await axios.get(
-          `http://localhost:5000/api/lost-items/lost-items/${id}`
+          `kerko-gjej-production.up.railway.app/api/lost-items/lost-items/${id}`
         );
         console.log("API response:", response.data);
         setLostItem(response.data);

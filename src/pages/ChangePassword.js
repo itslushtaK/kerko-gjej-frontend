@@ -62,7 +62,7 @@ const ChangePassword = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        "http://localhost:5000/api/auth/change-password",
+        "https://kerko-gjej-production.up.railway.app/api/auth/change-password",
         { currentPassword, newPassword },
         {
           headers: {

@@ -13,7 +13,7 @@ const LostItems = () => {
     const fetchLostItems = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/lost-items/lost-items"
+          "https://kerko-gjej-production.up.railway.app/api/lost-items/lost-items"
         );
         setLostItems(response.data);
       } catch (err) {
