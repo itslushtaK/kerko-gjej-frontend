@@ -34,7 +34,7 @@ const AddLostItem = () => {
 
     try {
       const response = await axios.post(
-        "https://kerko-gjej-production.up.railway.app//api/lost-items/add",
+        "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
         itemData,
         {
           headers: {
