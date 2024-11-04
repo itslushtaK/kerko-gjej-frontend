@@ -40,49 +40,53 @@ const AddLostItem = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    setSuccessMessage(null);
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+  setSuccessMessage(null);
 
-    if (!validateFields()) {
-      setLoading(false);
-      return;
-    }
+  if (!validateFields()) {
+    setLoading(false);
+    return;
+  }
 
-    try {
-      const response = await axios.post(
-        "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+  // Create a FormData object
+  const formData = new FormData();
+  formData.append("name", formData.name);
+  formData.append("description", formData.description);
+  formData.append("image", formData.image); // Append the file directly
+  formData.append("phoneNumber", formData.phoneNumber);
 
-      setSuccessMessage(
-        "Your post has been submitted for approval to the admin."
-      );
-      setTimeout(() => navigate("/lost-items"), 2000);
-    } catch (err) {
-      setError(err.response?.data?.error || "Error adding lost item");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await axios.post(
+      "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
+      formData,
+      {
+        headers: { 
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data" // Set the content type
+        },
+      }
+    );
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Convert the image file to base64 string and update formData
-        setFormData((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file); // Convert image to base64 string
-    } else {
-      setFormData((prev) => ({ ...prev, image: "" }));
-    }
-  };
+    setSuccessMessage("Your post has been submitted for approval to the admin.");
+    setTimeout(() => navigate("/lost-items"), 2000);
+  } catch (err) {
+    setError(err.response?.data?.error || "Error adding lost item");
+  } finally {
+    setLoading(false);
+  }
+};
+
+ const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    setFormData((prev) => ({ ...prev, image: file })); // Store the file directly
+  } else {
+    setFormData((prev) => ({ ...prev, image: "" }));
+  }
+};
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
