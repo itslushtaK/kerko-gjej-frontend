@@ -2,11 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUserPlus,
-  faEnvelopeOpenText,
-  faFileUpload,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUserPlus, faEnvelopeOpenText, faFileUpload } from "@fortawesome/free-solid-svg-icons";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -21,6 +17,9 @@ const Home = () => {
 
   return (
     <div className="relative overflow-hidden">
+      {/* Navbar */}
+      <Navbar className="relative z-50" />
+
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-white to-purple-300 animate-pulse-slow"></div>
 
