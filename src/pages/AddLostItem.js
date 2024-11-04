@@ -6,9 +6,9 @@ const AddLostItem = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    image: "",
     phoneNumber: "",
   });
-  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
@@ -23,10 +23,12 @@ const AddLostItem = () => {
   const validateFields = () => {
     let errors = {};
 
+    // Name validation
     if (!formData.name.trim()) {
       errors.name = "Item Name is required.";
     }
 
+    // Phone number validation
     const phoneRegex = /^\+383\d{8,}$/;
     if (formData.phoneNumber && !phoneRegex.test(formData.phoneNumber)) {
       errors.phoneNumber =
@@ -48,24 +50,12 @@ const AddLostItem = () => {
       return;
     }
 
-    // Use FormData to handle file upload
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("description", formData.description);
-    data.append("phoneNumber", formData.phoneNumber);
-    if (imageFile) {
-      data.append("image", imageFile); // Add the image file directly
-    }
-
     try {
       const response = await axios.post(
         "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-        data,
+        formData, // Changed from itemData to formData
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data", // Important for file uploads
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
 
@@ -80,23 +70,18 @@ const AddLostItem = () => {
     }
   };
 
-  const handleImageChange = async (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const formData = new FormData();
-    formData.append("image", file);
-    try {
-      const response = await axios.post(
-        "https://kerko-gjej-production.up.railway.app/api/upload-image",
-        formData
-      );
-      setFormData((prev) => ({ ...prev, image: response.data.imageUrl }));
-    } catch (err) {
-      setError("Image upload failed");
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file); // Convert image to base64 string
+    } else {
+      setFormData((prev) => ({ ...prev, image: "" }));
     }
-  }
-};
-
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
