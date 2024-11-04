@@ -53,7 +53,7 @@ const AddLostItem = () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/lost-items/add",
-        itemData,
+        formData, // Changed from itemData to formData
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
