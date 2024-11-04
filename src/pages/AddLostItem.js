@@ -52,13 +52,12 @@ const AddLostItem = () => {
 
     try {
       const response = await axios.post(
-  "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-  formData,
-  {
-    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-  }
-);
-
+        "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
+        formData,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       setSuccessMessage(
         "Your post has been submitted for approval to the admin."
@@ -76,6 +75,7 @@ const AddLostItem = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        // Convert the image file to base64 string and update formData
         setFormData((prev) => ({ ...prev, image: reader.result }));
       };
       reader.readAsDataURL(file); // Convert image to base64 string
