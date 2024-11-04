@@ -50,17 +50,17 @@ const AddLostItem = () => {
     return;
   }
 
-  // Create a FormData object
-  const formData = new FormData();
-  formData.append("name", formData.name);
-  formData.append("description", formData.description);
-  formData.append("image", formData.image); // Append the file directly
-  formData.append("phoneNumber", formData.phoneNumber);
+  // Use a different variable name to avoid conflict
+  const uploadData = new FormData();
+  uploadData.append("name", formData.name);
+  uploadData.append("description", formData.description);
+  uploadData.append("image", formData.image); // Append the file directly
+  uploadData.append("phoneNumber", formData.phoneNumber);
 
   try {
     const response = await axios.post(
       "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-      formData,
+      uploadData,
       {
         headers: { 
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -77,6 +77,7 @@ const AddLostItem = () => {
     setLoading(false);
   }
 };
+
 
  const handleImageChange = (e) => {
   const file = e.target.files[0];
