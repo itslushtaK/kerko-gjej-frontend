@@ -11,7 +11,7 @@ const ProfileView = () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve token from local storage
         const response = await axios.get(
-          "http://localhost:5000/api/auth/profile",
+          "kerko-gjej-production.up.railway.app/api/auth/profile",
           {
             headers: {
               Authorization: `Bearer ${token}`,
