@@ -40,54 +40,48 @@ const AddLostItem = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
-  setSuccessMessage(null);
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccessMessage(null);
 
-  if (!validateFields()) {
-    setLoading(false);
-    return;
-  }
+    if (!validateFields()) {
+      setLoading(false);
+      return;
+    }
 
-  // Use a different variable name to avoid conflict
-  const uploadData = new FormData();
-  uploadData.append("name", formData.name);
-  uploadData.append("description", formData.description);
-  uploadData.append("image", formData.image); // Append the file directly
-  uploadData.append("phoneNumber", formData.phoneNumber);
+    try {
+      const response = await axios.post(
+        "kerko-gjej.railway.internal/api/lost-items/add",
+        formData, // Changed from itemData to formData
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
-  try {
-    const response = await axios.post(
-      "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-      uploadData,
-      {
-        headers: { 
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data" // Set the content type
-        },
-      }
-    );
+      setSuccessMessage(
+        "Your post has been submitted for approval to the admin."
+      );
+      setTimeout(() => navigate("/lost-items"), 2000);
+    } catch (err) {
+      setError(err.response?.data?.error || "Error adding lost item");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setSuccessMessage("Your post has been submitted for approval to the admin.");
-    setTimeout(() => navigate("/lost-items"), 2000);
-  } catch (err) {
-    setError(err.response?.data?.error || "Error adding lost item");
-  } finally {
-    setLoading(false);
-  }
-};
-
-
- const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setFormData((prev) => ({ ...prev, image: file })); // Store the file directly
-  } else {
-    setFormData((prev) => ({ ...prev, image: "" }));
-  }
-};
-
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file); // Convert image to base64 string
+    } else {
+      setFormData((prev) => ({ ...prev, image: "" }));
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
