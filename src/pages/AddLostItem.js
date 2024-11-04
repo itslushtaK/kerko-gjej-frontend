@@ -53,7 +53,7 @@ const AddLostItem = () => {
     try {
       const response = await axios.post(
         "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-        formData, // Changed from itemData to formData
+        formData,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -70,16 +70,28 @@ const AddLostItem = () => {
     }
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData((prev) => ({ ...prev, image: reader.result }));
-      };
-      reader.readAsDataURL(file); // Convert image to base64 string
-    } else {
-      setFormData((prev) => ({ ...prev, image: "" }));
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await axios.post(
+        "https://kerko-gjej-production.up.railway.app/api/upload/upload-image",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      setFormData((prev) => ({ ...prev, image: response.data.imageUrl })); // Store the Cloudinary URL
+    } catch (error) {
+      console.error("Image upload failed", error);
+      setError("Failed to upload image");
     }
   };
 
