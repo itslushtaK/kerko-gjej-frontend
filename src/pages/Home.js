@@ -17,8 +17,10 @@ const Home = () => {
 
   return (
     <div className="relative overflow-hidden">
-      {/* Navbar */}
-      <Navbar className="relative z-50" />
+      {/* Navbar with higher z-index */}
+      <div className="relative z-50">
+        <Navbar />
+      </div>
 
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-white to-purple-300 animate-pulse-slow"></div>
