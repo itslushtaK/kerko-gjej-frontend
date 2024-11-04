@@ -57,7 +57,7 @@ const LostItemDetail = () => {
       <p className="text-gray-500 mb-2">
         Posted on: {new Date(lostItem.datePosted).toLocaleDateString()}
       </p>
-      <p className="text-gray-600 flex items-center gap-2">
+      <p className="text-gray-600 flex items-center gap-2 font-bold">
         Contact:
         <FontAwesomeIcon icon={faViber} className="text-purple-500" />
         <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
