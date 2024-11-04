@@ -52,7 +52,7 @@ const AddLostItem = () => {
 
     try {
       const response = await axios.post(
-        "kerko-gjej-production.up.railway.app/api/lost-items/add",
+        "https://kerko-gjej.vercel.app/api/lost-items/add",
         formData, // Changed from itemData to formData
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
