@@ -65,7 +65,9 @@ const AddLostItem = () => {
       );
       setTimeout(() => navigate("/lost-items"), 2000);
     } catch (err) {
-      setError(err.response?.data?.error || "Error adding lost item");
+      setError(
+        err.response?.data?.error || "Image size should not exceed 80 KB."
+      );
     } finally {
       setLoading(false);
     }
@@ -74,9 +76,8 @@ const AddLostItem = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Check file size (in bytes)
-      const fileSize = file.size; // size in bytes
-      const maxSize = 80 * 1024; // 80 KB in bytes
+      const fileSize = file.size;
+      const maxSize = 80 * 1024;
 
       if (fileSize > maxSize) {
         setError("Image size should not exceed 80 KB.");
