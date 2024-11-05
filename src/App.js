@@ -92,7 +92,7 @@ function App() {
         <Route path="/lost-item/:id" element={<LostItemDetail />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="/item-approved" element={<ItemApproved />} />
-          <Route path="/approve-item/:id" component={ApproveItemPage} />
+        <Route path="/approve-item/:id" component={ApproveItemPage} />
       </Routes>
     </>
   );

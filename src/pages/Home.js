@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/Footer";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUserPlus,
@@ -19,16 +21,10 @@ const Home = () => {
   };
 
   return (
-    <div className="relative overflow-hidden">
-      {/* Navbar with higher z-index */}
-      <div className="relative z-50"></div>
-
-      {/* Animated Background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-blue-300 via-white to-purple-300 animate-pulse-slow"></div>
-
+    <div className="relative overflow-hidden min-h-screen flex flex-col">
       {/* Main Content */}
       <div
-        className="flex flex-col items-center justify-center min-h-screen bg-cover bg-center text-white font-poppins p-6 relative z-10"
+        className="flex-grow relative z-10 flex flex-col items-center justify-center bg-cover bg-center text-white font-poppins p-6"
         style={{
           backgroundImage:
             "url('https://source.unsplash.com/random/1920x1080?lost-and-found')",
@@ -107,6 +103,9 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };

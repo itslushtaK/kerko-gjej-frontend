@@ -55,7 +55,7 @@ const LostItems = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto pt-20 py-4">
+    <div className="max-w-4xl mx-auto pt-20 px-4 py-4">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
         Lost Items
       </h2>
@@ -64,7 +64,7 @@ const LostItems = () => {
           <Link
             to={`/lost-item/${item._id}`}
             key={item._id}
-            className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105"
+            className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 mb-4" // Added mb-4 for spacing between cards
           >
             <img
               src={item.image ? item.image : defaultImage}
