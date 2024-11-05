@@ -4,7 +4,6 @@ import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faViber, faWhatsapp, faPhone } from '@fortawesome/free-brands-svg-icons';
 
-
 const LostItemDetail = () => {
   const { id } = useParams(); // Get the ID from the URL
   const [lostItem, setLostItem] = useState(null);
@@ -42,7 +41,7 @@ const LostItemDetail = () => {
     <div className="max-w-2xl mx-auto py-4 relative">
       <Link
         to="/lost-items"
-        className=" bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
       >
         Back to All Lost Items
       </Link>
@@ -58,19 +57,36 @@ const LostItemDetail = () => {
       <p className="text-gray-500 mb-2">
         Posted on: {new Date(lostItem.datePosted).toLocaleDateString()}
       </p>
-     <p className="text-gray-600 flex items-center gap-2">
-  Contact:
-  <a href={`viber://add?number=${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
-    <FontAwesomeIcon icon={faViber} className="text-purple-500" />
-  </a>
-  <a href={`https://wa.me/${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
-    <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
-  </a>
-  <a href={`tel:${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
-    <FontAwesomeIcon icon={faPhone} className="text-gray-500" />
-  </a>
-  {lostItem.phoneNumber}
-</p>
+      {lostItem.phoneNumber && (
+        <p className="text-gray-600 flex items-center gap-2">
+          Contact:
+          <a
+            href={`viber://add?number=${lostItem.phoneNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contact via Viber"
+          >
+            <FontAwesomeIcon icon={faViber} className="text-purple-500" />
+          </a>
+          <a
+            href={`https://wa.me/${lostItem.phoneNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Contact via WhatsApp"
+          >
+            <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
+          </a>
+          <a
+            href={`tel:${lostItem.phoneNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Call"
+          >
+            <FontAwesomeIcon icon={faPhone} className="text-gray-500" />
+          </a>
+          {lostItem.phoneNumber}
+        </p>
+      )}
     </div>
   );
 };
