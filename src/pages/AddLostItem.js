@@ -54,7 +54,7 @@ const AddLostItem = () => {
     try {
       const response = await axios.post(
         "https://kerko-gjej-production.up.railway.app/api/lost-items/add",
-        formData, // Changed from itemData to formData
+        formData,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -66,7 +66,8 @@ const AddLostItem = () => {
       setTimeout(() => navigate("/lost-items"), 2000);
     } catch (err) {
       setError(
-        err.response?.data?.error || "Image size should not exceed 80 KB."
+        err.response?.data?.error ||
+          "An error occurred while submitting the form."
       );
     } finally {
       setLoading(false);
@@ -76,19 +77,18 @@ const AddLostItem = () => {
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const fileSize = file.size;
-      const maxSize = 80 * 1024;
+      const maxSize = 80 * 1024; // 80 KB
 
-      if (fileSize > maxSize) {
+      if (file.size > maxSize) {
         setError("Image size should not exceed 80 KB.");
         return;
       }
 
       try {
         const options = {
-          maxSizeMB: 0.08, // maximum size in MB (80 KB)
-          maxWidthOrHeight: 1920, // max width or height
-          useWebWorker: true, // use web worker for compression
+          maxSizeMB: 0.08,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
         };
 
         // Compress the image
@@ -97,12 +97,13 @@ const AddLostItem = () => {
         reader.onloadend = () => {
           setFormData((prev) => ({ ...prev, image: reader.result }));
         };
-        reader.readAsDataURL(compressedFile); // Convert compressed image to base64 string
+        reader.readAsDataURL(compressedFile);
       } catch (err) {
         setError("Error compressing image.");
         console.error(err);
       }
     } else {
+      // Clear the image if no file is selected
       setFormData((prev) => ({ ...prev, image: "" }));
     }
   };
