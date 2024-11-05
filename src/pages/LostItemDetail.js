@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faViber, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { faViber, faWhatsapp, faPhone } from '@fortawesome/free-brands-svg-icons';
+
 
 const LostItemDetail = () => {
   const { id } = useParams(); // Get the ID from the URL
@@ -57,12 +59,19 @@ const LostItemDetail = () => {
       <p className="text-gray-500 mb-2">
         Posted on: {new Date(lostItem.datePosted).toLocaleDateString()}
       </p>
-      <p className="text-gray-600 flex items-center gap-2">
-        Contact:
-        <FontAwesomeIcon icon={faViber} className="text-purple-500" />
-        <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
-        {lostItem.phoneNumber className="font-bold"}
-      </p>
+     <p className="text-gray-600 flex items-center gap-2">
+  Contact:
+  <a href={`viber://add?number=${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
+    <FontAwesomeIcon icon={faViber} className="text-purple-500" />
+  </a>
+  <a href={`https://wa.me/${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
+    <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
+  </a>
+  <a href={`tel:${lostItem.phoneNumber}`} target="_blank" rel="noopener noreferrer">
+    <FontAwesomeIcon icon={faPhone} className="text-gray-500" />
+  </a>
+  {lostItem.phoneNumber}
+</p>
     </div>
   );
 };
