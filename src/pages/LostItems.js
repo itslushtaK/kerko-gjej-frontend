@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
 
 const LostItems = () => {
@@ -55,41 +56,44 @@ const LostItems = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto pt-20 px-4 py-4">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-        Lost Items
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {lostItems.map((item) => (
-          <Link
-            to={`/lost-item/${item._id}`}
-            key={item._id}
-            className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 mb-4" // Added mb-4 for spacing between cards
-          >
-            <img
-              src={item.image ? item.image : defaultImage}
-              alt={item.name || "Lost item"}
-              className="w-full h-40 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold text-gray-800">
-                {item.name}
-              </h3>
-              <p className="text-gray-600 mb-2">
-                {item.description.length > 20
-                  ? `${item.description.slice(0, 20)}...`
-                  : item.description}
-              </p>
-              <p className="text-sm text-gray-500">
-                Posted on: {new Date(item.datePosted).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-500">
-                Contact: {item.phoneNumber}
-              </p>
-            </div>
-          </Link>
-        ))}
+    <div className="flex flex-col min-h-screen">
+      <div className="max-w-6xl mx-auto pt-20 px-4 py-4 flex-grow">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Lost Items
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {lostItems.map((item) => (
+            <Link
+              to={`/lost-item/${item._id}`}
+              key={item._id}
+              className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 mb-4"
+            >
+              <img
+                src={item.image ? item.image : defaultImage}
+                alt={item.name || "Lost item"}
+                className="w-full h-40 object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-semibold text-gray-800">
+                  {item.name}
+                </h3>
+                <p className="text-gray-600 mb-2">
+                  {item.description.length > 20
+                    ? `${item.description.slice(0, 20)}...`
+                    : item.description}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Posted on: {new Date(item.datePosted).toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Contact: {item.phoneNumber}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };
