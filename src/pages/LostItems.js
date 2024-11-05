@@ -75,7 +75,11 @@ const LostItems = () => {
               <h3 className="text-xl font-semibold text-gray-800">
                 {item.name}
               </h3>
-              <p className="text-gray-600 mb-2">{item.description}</p>
+              <p className="text-gray-600 mb-2">
+                {item.description.length > 20
+                  ? `${item.description.slice(0, 20)}...`
+                  : item.description}
+              </p>
               <p className="text-sm text-gray-500">
                 Posted on: {new Date(item.datePosted).toLocaleDateString()}
               </p>
