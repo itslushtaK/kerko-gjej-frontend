@@ -22,7 +22,7 @@ const ResetPassword = () => {
 
     try {
       const response = await axios.post(
-        `kerko-gjej-production.up.railway.app/api/auth/reset-password/${token}`,
+        `https://kerko-gjej-production.up.railway.app/api/auth/reset-password/${token}`,
         { newPassword }
       );
       setMessage(response.data.msg);
