@@ -6,25 +6,22 @@ import { faViber, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 import { faPhone } from "@fortawesome/free-solid-svg-icons";
 
 const LostItemDetail = () => {
-  const { id } = useParams(); // Get the ID from the URL
+  const { id } = useParams();
   const [lostItem, setLostItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const defaultImage =
-    "https://imgs.search.brave.com/Tn5pKlMOw0_FerWffTprFCqRcdROmyyfH62WlFnrX-A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9h/L2FjL05vX2ltYWdl/X2F2YWlsYWJsZS5z/dmc"; // Default image URL
+    "https://imgs.search.brave.com/Tn5pKlMOw0_FerWffTprFCqRcdROmyyfH62WlFnrX-A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy9h/L2FjL05vX2ltYWdl/X2F2YWlsYWJsZS5z/dmc";
 
   useEffect(() => {
     const fetchLostItem = async () => {
       try {
-        console.log("Fetching lost item with ID:", id);
         const response = await axios.get(
           `https://kerko-gjej-production.up.railway.app/api/lost-items/lost-items/${id}`
         );
-        console.log("API response:", response.data);
         setLostItem(response.data);
       } catch (err) {
-        console.error("Error fetching lost item:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -39,55 +36,63 @@ const LostItemDetail = () => {
   if (!lostItem) return <div className="text-center">Lost item not found.</div>;
 
   return (
-    <div className="max-w-2xl mx-auto py-4 relative">
+    <div className="max-w-2xl mx-auto py-8 px-4">
       <Link
         to="/lost-items"
-        className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200"
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200 inline-block mb-6 shadow-lg"
       >
         Back to All Lost Items
       </Link>
-      <h2 className="text-2xl font-bold mb-4 text-left mt-16">
-        {lostItem.name}
-      </h2>
-      <img
-        src={lostItem.image || defaultImage} // Use default image if item image is not available
-        alt={lostItem.name}
-        className="w-full h-64 object-cover rounded-lg mb-4"
-      />
-      <p className="text-gray-700 mb-2">{lostItem.description}</p>
-      <p className="text-gray-500 mb-2">
-        Posted on: {new Date(lostItem.datePosted).toLocaleDateString()}
-      </p>
-      {lostItem.phoneNumber && (
-        <p className="text-gray-600 flex items-center gap-2">
-          Contact:
-          <a
-            href={`viber://add?number=${lostItem.phoneNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Contact via Viber"
-          >
-            <FontAwesomeIcon icon={faViber} className="text-purple-500" />
-          </a>
-          <a
-            href={`https://wa.me/${lostItem.phoneNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Contact via WhatsApp"
-          >
-            <FontAwesomeIcon icon={faWhatsapp} className="text-green-500" />
-          </a>
-          <a
-            href={`tel:${lostItem.phoneNumber}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Call"
-          >
-            <FontAwesomeIcon icon={faPhone} className="text-gray-500" />
-          </a>
-          {lostItem.phoneNumber}
-        </p>
-      )}
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+        <img
+          src={lostItem.image || defaultImage}
+          alt={lostItem.name}
+          className="w-full h-72 object-cover"
+        />
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            {lostItem.name}
+          </h2>
+          <p className="text-gray-600 mb-4">{lostItem.description}</p>
+          <p className="text-gray-500 mb-4">
+            <strong>Posted on:</strong>{" "}
+            {new Date(lostItem.datePosted).toLocaleDateString()}
+          </p>
+          {lostItem.phoneNumber && (
+            <div className="text-gray-600 flex items-center gap-4">
+              <span className="font-semibold text-gray-700">Contact:</span>
+              <a
+                href={`viber://add?number=${lostItem.phoneNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-purple-500 hover:text-purple-600"
+                aria-label="Contact via Viber"
+              >
+                <FontAwesomeIcon icon={faViber} className="text-2xl" />
+              </a>
+              <a
+                href={`https://wa.me/${lostItem.phoneNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-500 hover:text-green-600"
+                aria-label="Contact via WhatsApp"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} className="text-2xl" />
+              </a>
+              <a
+                href={`tel:${lostItem.phoneNumber}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-700"
+                aria-label="Call"
+              >
+                <FontAwesomeIcon icon={faPhone} className="text-2xl" />
+              </a>
+              <span className="text-gray-800 ml-2">{lostItem.phoneNumber}</span>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
